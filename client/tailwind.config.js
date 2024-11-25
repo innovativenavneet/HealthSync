@@ -2,10 +2,15 @@
 module.exports = {
   content: [
     "./index.html",
-    "./src/**/*.{js,jsx,ts,tsx}", // Make sure all paths are correct
+    "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+
+      fontFamily: {
+        sans: ['Open Sans', 'sans-serif'],
+    },
+  },
   },  
   plugins: [],
 }

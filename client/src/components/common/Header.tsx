@@ -21,23 +21,23 @@ export default function Header() {
         {/* Navigation Links */}
         <ul className="flex space-x-10 text-white font-semibold">
           <li>
-            <Link to="/" className="relative hover:underline transition-colors underline-offset-4">
-              Home
+            <Link to="/" className="font-sans relative hover:underline transition-colors underline-offset-4">
+              HOME
             </Link>
           </li>
           <li>
             <Link to="/dashboard" className="relative hover:underline transition-colors underline-offset-4">
-              Dashboard
+              DASHBOARD
             </Link>
           </li>
           <li>
             <Link to="/appointments" className="relative hover:underline transition-colors underline-offset-4">
-              Appointments
+              APPOINTMENTS
             </Link>
           </li>
           <li>
             <Link to="/profile" className="relative hover:underline transition-colors underline-offset-4">
-              Profiles
+              PROFILES
             </Link>
           </li>
         </ul>
@@ -45,15 +45,15 @@ export default function Header() {
 
       {/* SignUp Button */}
       <Link to="/SignUp" className="hidden md:inline-block"> {/* Hidden on mobile */}
-        <button className="ml-40 mr-auto text-black font-bold rounded-full">
-          Sign Up
+        <button className="ml-30 mr-auto text-black font-bold rounded-full">
+          SIGN UP
         </button>
       </Link>
 
       {/* Log In Button */}
       <Link to="/login" className="hidden md:inline-block"> {/* Hidden on mobile */}
         <button className="ml-3 mr-10 bg-[var(--blue)] border font-bold border-white text-white px-4 py-2 rounded-[10px] hover:bg-[#174a77] transition-colors">
-          Log In
+          LOG IN
         </button>
       </Link>
 

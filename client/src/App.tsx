@@ -12,7 +12,8 @@ import Profile from "./pages/Profile";
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>                    
+        <div className="font-sans">
+        <BrowserRouter>                    
         <Routes>
 
 
@@ -25,6 +26,9 @@ function App() {
 
         </Routes>
       </BrowserRouter>
+
+        </div>
+   
     </div>
   );
 }
