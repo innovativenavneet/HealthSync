@@ -1,4 +1,4 @@
-DOC-Tech (Project)
+HealthSync (Project)
 your-project-name/
 ├── client/ # Frontend (React) - Patient and Doctor Dashboard
 ├── server/ # Backend (Node.js & Express) - API and business logic
