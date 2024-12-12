@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/common/Header"; // Assuming Header is a common component
 
-// Define interfaces for Task and Patient data
+// Define interfaces for Task, Patient, and Doctor data
 interface Task {
   id: number;
   title: string;
@@ -15,11 +15,18 @@ interface Patient {
   primaryComplaint: string;
 }
 
-const HomePage: React.FC = () => {
+interface Doctor {
+  doctorName?: string;
+}
+
+const HomePage: React.FC<Doctor> = ({ doctorName }) => {
   // State to store tasks and recent patients
   const [tasks, setTasks] = useState<Task[]>([]);
   const [recentPatients, setRecentPatients] = useState<Patient[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
+
+   // Default static doctor name
+   const staticDoctorName = "John Doe";
 
   // Fetch data from an API
   useEffect(() => {
@@ -60,6 +67,20 @@ const HomePage: React.FC = () => {
   return (
     <>
       <Header /> {/* Common header component */}
+
+      <div className="bg-[var(--light-blue)] p-8">
+        {/* Main Content */}
+        <div className="container mx-auto">
+          {/* Header Section */}
+          <div className="flex justify-between items-center mb-6">
+            {/* Dynamic doctor name */}
+            <h1 className="text-3xl font-semibold text-blue-900">
+              Good Morning, Dr. {doctorName || staticDoctorName}
+            </h1>
+          </div>
+        </div>
+      </div>
+
       <div className="min-h-screen bg-[var(--light-blue)] p-8">
         <div className="container mx-auto flex space-x-8">
           {/* Upcoming Consultations Section */}
@@ -112,7 +133,7 @@ const HomePage: React.FC = () => {
                       </div>
                     </div>
                     {/* Action Buttons */}
-                    <div className="flex  space-x-2 ">
+                    <div className="flex space-x-2">
                       <button className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
                         Add Note
                       </button>
