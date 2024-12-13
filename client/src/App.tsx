@@ -1,7 +1,7 @@
-import React from "react";
+// import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/HomePage/HomePage";
 import Dashboard from "./pages/Dashboard";
 import Appointments from "./pages/Appointments";
 import Profile from "./pages/Profile";
@@ -11,6 +11,7 @@ import Profile from "./pages/Profile";
 
 function App() {
   return (
+
     <div className="App">
         <div className="font-sans">
         <BrowserRouter>                    
