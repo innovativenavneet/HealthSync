@@ -1,80 +1,119 @@
 import { useState, useEffect } from "react";
+import { AiOutlinePlus } from "react-icons/ai";
 
 const TodaysTasks = () => {
   const [tasks, setTasks] = useState([]);
-  const [selectedTask, setSelectedTask] = useState(null);
-  const [showPopup, setShowPopup] = useState(false);
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
+  const [showNotePopup, setShowNotePopup] = useState(false);
+  const [noteText, setNoteText] = useState("");
 
-  // Mock data as fallback
-  const mockTasks = [
-    { id: 1, title: "Follow-up with Patient A", description: "Discuss medication adjustments." },
-    { id: 2, title: "Review Lab Results", description: "Analyze test results from yesterday." },
-    { id: 3, title: "Team Meeting", description: "Discuss new protocols and case studies." },
-  ];
+  const API_BASE_URL = "https://example.com/api"; // Replace with your API URL
 
-  // Fetch tasks from API or use mock data
+  // Generic function to fetch tasks
+  const fetchTasks = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/tasks`);
+      if (!response.ok) throw new Error("Failed to fetch from server");
+      const data = await response.json();
+      setTasks(data.map((task) => ({ ...task, notes: task.notes || [] })));
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+      // Fallback to mock data
+      setTasks([
+        { id: 1, title: "Follow-up with Patient A", notes: [] },
+        { id: 2, title: "Review Lab Results", notes: [] },
+        { id: 3, title: "Team Meeting", notes: [] },
+      ]);
+    }
+  };
+
+  // Generic function to save notes
+  const saveNoteToServer = async (taskId, note) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/tasks/${taskId}/notes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ note }),
+      });
+      if (!response.ok) throw new Error("Failed to save note on server");
+      return true;
+    } catch (error) {
+      console.error("Error saving note to server:", error);
+      return false;
+    }
+  };
+
+  // Add note handler
+  const handleSaveNote = async () => {
+    if (noteText.trim() === "") return;
+
+    const noteSaved = selectedTaskId
+      ? await saveNoteToServer(selectedTaskId, noteText)
+      : false;
+
+    // Save locally if server fails or no task ID
+    if (!noteSaved || !selectedTaskId) {
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task.id === selectedTaskId
+            ? { ...task, notes: [...task.notes, noteText] }
+            : task
+        )
+      );
+    }
+
+    // Reset state
+    setNoteText("");
+    setShowNotePopup(false);
+  };
+
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await fetch("https://jsonplaceholder.typicode.com/todos?_limit=3");
-        const data = await response.json();
-        setTasks(data.map((task) => ({
-          id: task.id,
-          title: task.title,
-          description: "No additional details available.",
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), // Add time here
-        })));
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-        setTasks(mockTasks.map((task) => ({
-          ...task,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), // Add time to mock tasks
-        })));
-      }
-    };
-
     fetchTasks();
   }, []);
 
-  // Handle task click to show popup
-  const handleTaskClick = (task) => {
-    setSelectedTask(task);
-    setShowPopup(true);
-  };
-
-  // Close the popup
-  const closePopup = () => {
-    setShowPopup(false);
-    setSelectedTask(null);
-  };
-
-  // Handle View More button click to navigate to the appointment page
-  const handleViewMoreClick = () => {
-    window.location.href = "/appointments";  // Redirect to the appointments page
-  };
-
   return (
-    <div className="relative bg-white p-4 rounded-[7px] shadow-lg w-[686px] h-[311px] mt-4 border border-gray-300 left-[30px]">
+    <div className="relative bg-white p-4 rounded-[7px] shadow-lg w-[686px] h-[250px] mt-4 border border-gray-300 left-[30px]">
       <header className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold text-blue-900 h-[30px] w-[163px]">Today's Tasks</h2>
-        <span className="bg-blue-100 text-blue-900 px-2 py-1 rounded-full text-sm font-medium h-[26px] w-[59px]">
-          {tasks.length}
-        </span>
+        <h2 className="text-2xl font-semibold text-blue-900">Today's Tasks</h2>
+        <div className="flex items-center space-x-2">
+          <span className="bg-blue-100 text-blue-900 px-2 py-1 rounded-full text-sm font-medium">
+            {tasks.length}
+          </span>
+          <AiOutlinePlus
+            className="text-blue-900 cursor-pointer"
+            size={30}
+            onClick={() => setShowNotePopup(true)} // Open popup to add generic note
+          />
+        </div>
       </header>
 
-      <div className="overflow-y-auto h-[240px]">
+      <div className="overflow-y-auto h-[200px]">
         {tasks.length > 0 ? (
           tasks.map((task) => (
             <div
               key={task.id}
-              className="flex flex-col justify-start items-start p-2 mb-2 bg-gray-100 hover:bg-gray-200 cursor-pointer w-[638px] h-[58px] top-[62px] left-[28px] rounded-[7px] border border-gray-300"
-              onClick={() => handleTaskClick(task)}
+              className="flex flex-col justify-start items-start p-2 mb-2 bg-gray-100 hover:bg-gray-200 cursor-pointer rounded-[7px] border border-gray-300"
             >
               <div className="flex justify-between items-center w-full">
                 <span className="font-medium text-blue-800">{task.title}</span>
-                <button className="bg-blue-500 text-white px-2 py-1 rounded text-sm">View</button>
+                <AiOutlinePlus
+                  className="text-blue-500 cursor-pointer"
+                  size={16}
+                  onClick={() => {
+                    setSelectedTaskId(task.id);
+                    setShowNotePopup(true);
+                  }}
+                />
               </div>
-              <span className="text-gray-500 text-xs">{task.time}</span> {/* Display time below task */}
+              {task.notes.length > 0 && (
+                <ul className="text-sm text-gray-700 mt-2">
+                  {task.notes.map((note, index) => (
+                    <li key={index} className="list-disc ml-4">
+                      {note}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           ))
         ) : (
@@ -82,29 +121,34 @@ const TodaysTasks = () => {
         )}
       </div>
 
-      {/* Popup for task details */}
-      {showPopup && selectedTask && (
+      {/* Add Note Popup */}
+      {showNotePopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded shadow-lg w-[400px]">
-            <h3 className="text-xl font-semibold text-blue-900 mb-4">{selectedTask.title}</h3>
-            <p className="text-gray-700 mb-4">{selectedTask.description}</p>
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-              onClick={closePopup}
-            >
-              Close
-            </button>
+            <h3 className="text-lg font-semibold text-blue-900 mb-4">Add a Note</h3>
+            <textarea
+              className="w-full p-2 border rounded h-[100px] text-gray-700"
+              placeholder="Write your note here..."
+              value={noteText}
+              onChange={(e) => setNoteText(e.target.value)}
+            ></textarea>
+            <div className="flex justify-end mt-4 space-x-2">
+              <button
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                onClick={() => setShowNotePopup(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                onClick={handleSaveNote}
+              >
+                Save Note
+              </button>
+            </div>
           </div>
         </div>
       )}
-
-      {/* View More Button */}
-      <button
-        className="absolute bottom-[30px] right-[44px] w-[79px] h-[26px] left-[575px] top-[268px] bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
-        onClick={handleViewMoreClick}
-      >
-        View More
-      </button>
     </div>
   );
 };
