@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../pages/FireBase/firebaseConfig"
 
 const mockData = [
     { id: 1, name: "John Doe", age: 30, complaint: "Fever and Cough" },
@@ -10,39 +12,50 @@ const mockData = [
 
 const RecentPatient = () => {
     const [patients, setPatients] = useState([]);
+    const [filteredPatients, setFilteredPatients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [filteredPatients, setFilteredPatients] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [showAll, setShowAll] = useState(false);
 
     useEffect(() => {
-        const fetchPatients = async () => {
-            try {
-                const response = await fetch("https://jsonplaceholder.typicode.com/users");
-                if (!response.ok) {
-                    throw new Error("Failed to load the patient list");
+        const checkAuthAndFetchPatients = async () => {
+            setLoading(true);
+            setError(null);
+
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    // User is logged in, fetch API data
+                    try {
+                        const response = await fetch("https://jsonplaceholder.typicode.com/users");
+                        if (!response.ok) {
+                            throw new Error("Failed to load the patient list");
+                        }
+                        const data = await response.json();
+                        const patientData = data.slice(0, 5).map((user, index) => ({
+                            id: user.id,
+                            name: user.name,
+                            age: 20 + index * 5, // Mock age
+                            complaint: "General Checkup", // Mock complaint
+                        }));
+                        setPatients(patientData);
+                        setFilteredPatients(patientData);
+                    } catch (err) {
+                        console.error("Error fetching patient list", err);
+                        setError("Could not fetch the data. Showing mock data.");
+                        setPatients(mockData);
+                        setFilteredPatients(mockData);
+                    }
+                } else {
+                    // User is not logged in, show mock data
+                    setPatients(mockData);
+                    setFilteredPatients(mockData);
                 }
-                const data = await response.json();
-                const patientData = data.length === 0 ? mockData : data.slice(0, 5).map((user, index) => ({
-                    id: user.id,
-                    name: user.name,
-                    age: 20 + index * 5, // Mock age
-                    complaint: "General Checkup", // Mock complaint
-                }));
-                setPatients(patientData);
-                setFilteredPatients(patientData);
-            } catch (err) {
-                console.error("Error fetching patient list", err);
-                setError("Could not fetch the data. Showing mock data.");
-                setPatients(mockData);
-                setFilteredPatients(mockData);
-            } finally {
                 setLoading(false);
-            }
+            });
         };
 
-        fetchPatients();
+        checkAuthAndFetchPatients();
     }, []);
 
     const handleSearch = () => {
