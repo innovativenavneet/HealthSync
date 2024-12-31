@@ -5,16 +5,25 @@ import { useUserAuth } from "../context/UserAuthContext";
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("PATIENT"); // Default role
   const [error, setError] = useState("");
   const { signup } = useUserAuth();
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
-      await signup(email, password);
-      Navigate("/");
+      const userCredential = await signup(email, password);
+      const uid = userCredential.user.uid;
+
+      // Save role and UID to localStorage
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ uid, role })
+      );
+
+      navigate("/home");
     } catch (err) {
       setError(err.message);
     }
@@ -24,7 +33,7 @@ const SignUp = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900">
       <div className="bg-white shadow-md rounded-lg p-8 max-w-sm w-full">
         <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
-          Firebase Auth Signup
+          Health Sync Signup
         </h2>
 
         {error && (
@@ -52,6 +61,20 @@ const SignUp = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+          </div>
+
+          <div className="mb-4">
+            <label className="block mb-2 text-gray-700 font-medium">
+              Select Role
+            </label>
+            <select
+              className="w-full border border-gray-300 rounded px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
+              <option value="PATIENT">Patient</option>
+              <option value="DOCTOR">Doctor</option>
+            </select>
           </div>
 
           <div>

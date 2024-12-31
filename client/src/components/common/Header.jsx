@@ -29,7 +29,7 @@ const Header = () => {
       <nav className="hidden md:flex bg-[var(--blue)] shadow-md w-[71.5%] rounded-lg justify-center items-center mx-auto">
         <ul className="flex space-x-20 text-white font-semibold px-4 py-2">
           <li className="hover:underline transition-colors underline-offset-4">
-            <Link to={"/"}>HOME</Link>
+            <Link to={"/home"}>HOME</Link>
           </li>
           <li className="hover:underline transition-colors underline-offset-4">
             <Link to={"/appointments"}>APPOINTMENTS</Link>
