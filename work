@@ -1,0 +1,8 @@
+i want following changes :: 
+1.> the dr name will be coming from backend by listing api so use a name fot that 
+2.> the today's task section can be added and a form like structure will be opend( its like a to do web app structure) and when data is filled then it will go to backend through which the lsiting apis wil be called to list on the front end 
+
+
+3.> for recent Patients :: 
+    it will coming from the appointments sections then from the appointments sections the listing APIs will be called and relected on the front page  
+

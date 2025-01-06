@@ -1,0 +1,3 @@
+# to add anything to git ignore , add like this :: 
+# echo .env >> .gitignore
+.env

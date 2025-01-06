@@ -1,0 +1,17 @@
+Flowchart for health sync :
+first a login page with the question are you a doctor or patient login 
+if the patient then a list of available doctors will appear (which will be coming from profiles) then the patient can book an appointment, questions :: (mail , age , gender, name , symptoms these are mandatory),  reports if any , previous medical history then  slot will be booked with confirmation message this booked appointment will be shown in the doctor's appointment section 
+if doctor: 
+the home page appear :: 
+upcoming cosulations from appointment section , today's task like a to do task , recent patients (coming from patients which already treated from dashboard ) after consultation , 
+appointment section :: 
+add new appointment , if doctor wants to add appointment and from patients flow also ,
+Dashboard section :: 
+patients list will appear , 
+start session selected from patient listing ,
+then basic info will be open 
+then when mic is pressed the speech to text  feature will make a report , 
+that report will be mailed to patient emailid , inventory , 
+and patient name will be added to recent patient , 
+profile section: 
+where doctor can add photo basic info and area of expertise  
