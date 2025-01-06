@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserAuth } from "../context/UserAuthContext";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore"; // Import Firestore
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -9,13 +10,40 @@ const SignUp = () => {
   const [error, setError] = useState("");
   const { signup } = useUserAuth();
   const navigate = useNavigate();
+  const db = getFirestore(); // Initialize Firestore
+
+  // Function to save user data to Firestore
+  const saveUserToFirestore = async (uid, email, role) => {
+    try {
+      const userDocRef = doc(db, "users", uid);
+      const userDoc = await getDoc(userDocRef);
+
+      // Only save data if the user document doesn't already exist
+      if (!userDoc.exists()) {
+        await setDoc(userDocRef, {
+          email,
+          role,
+          createdAt: new Date(),
+        });
+        console.log("User data saved in Firestore");
+      } else {
+        console.log("User already exists in Firestore");
+      }
+    } catch (err) {
+      console.error("Error saving user data to Firestore:", err.message);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
     try {
       const userCredential = await signup(email, password);
       const uid = userCredential.user.uid;
+
+      // Save user data to Firestore
+      await saveUserToFirestore(uid, email, role);
 
       // Save role and UID to localStorage
       localStorage.setItem(

@@ -1,72 +1,155 @@
-import React from 'react';
+import React from "react";
+import Header from "../components/common/Header";
+import { getFirestore, getDocs, collection, doc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import app from "../pages/FireBase/firebaseConfig";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 
 const Profile = () => {
+  const navigate = useNavigate();
+
+  const [profileData, setProfileData] = useState([]);
+
+  const fetchProfile = async ()=>
+  {
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const user = auth.currentUser;
+
+    if(!user)
+    {
+      console.error("No authenticated user found. Please log in.");
+      return;
+    }
+
+    const profileRef = collection(db,"users", user.uid, "Profile");
+    console.log(user.uid);
+
+    
+
+    try
+    {
+      const querySnapshot = await getDocs(profileRef);
+      const fetchedProfile = querySnapshot.docs.map((doc) =>({
+        id : doc.id,
+        ...doc.data(),
+      }))
+      console.log(fetchedProfile);
+      
+      setProfileData(fetchedProfile);
+      console.log("igpeoirgh",id);
+      
+    }
+    catch(err)
+    {
+      console.log("Error fetching the Data");
+    }
+
+  };
+
+  useEffect(()=>{
+    fetchProfile();
+  },[]);
+
+
+
+
+
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center py-10 ">
-      <div className="max-w-3xl w-full bg-white p-6 rounded-lg shadow-lg">
-        <div className="flex items-center mb-6">
-          {/* Profile Picture */}
-          <img
-            src="https://via.placeholder.com/150"
-            alt="Profile"
-            className="w-24 h-24 rounded-full border-2 border-gray-300 mr-6"
-          />
-          {/* Name and Specialization */}
-          <div>
-            <h2 className="text-3xl font-semibold text-blue-600">Dr. John Doe</h2>
-            <p className="text-gray-700 text-lg">Cardiologist</p>
+    <div>
+      <Header />
+      {
+        profileData.length > 0 ? (
+          profileData.map((profile)=>(
+        <div key={profile.id} className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-50">
+
+          <div className="max-w-5xl mx-auto mt-12 px-6">
+            {/* Profile Card */}
+            <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+              {/* Profile Header */}
+              <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-center">
+                <img
+                  src={profile.Image}
+                  alt="Profile"
+                  className="w-24 h-24 mx-auto rounded-full border-4 border-white shadow-md object-cover"
+                />
+                <h2 className="mt-4 text-3xl font-bold text-white">{profile.Name}</h2>
+                <h3 className="text-lg text-gray-200">Category</h3>
+              </div>
+    
+              {/* Profile Details */}
+              <div className="p-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {/* Email */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-500 uppercase">
+                      Email
+                    </h4>
+                    <p className="text-lg font-medium text-gray-800">{profile.Email}</p>
+                  </div>
+    
+                  {/* License No. */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-500 uppercase">
+                      License No.
+                    </h4>
+                    <p className="text-lg font-medium text-gray-800">{profile.LicenseNumber}</p>
+                  </div>
+    
+                  {/* Address */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-500 uppercase">
+                      Address
+                    </h4>
+                    <p className="text-lg font-medium text-gray-800">
+                    {profile.Address}
+                    </p>
+                  </div>
+    
+                  {/* Contact Info */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-500 uppercase">
+                      Contact Info
+                    </h4>
+                    <p className="text-lg font-medium text-gray-800">{profile.PhoneNumber}</p>
+                  </div>
+    
+                  {/* Experience */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-500 uppercase">
+                      Experience
+                    </h4>
+                    <p className="text-lg font-medium text-gray-800">{profile.Experience}</p>
+                  </div>
+    
+                  {/* Hospital Name */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-500 uppercase">
+                      Hospital Name
+                    </h4>
+                    <p className="text-lg font-medium text-gray-800">{profile.HospitalName}</p>
+                  </div>
+                </div>
+              </div>
+    
+              {/* Footer */}
+              <div className="bg-gray-100 p-4 text-center">
+                <button
+                onClick={()=>{navigate("/updateprofile")}}
+                 className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 transition duration-200">
+                  Edit Profile
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Contact Information */}
-        <div className="mb-4">
-          <h3 className="text-xl font-semibold text-gray-800">Contact Information</h3>
-          <p className="text-gray-600"><strong>Email:</strong> doctor@example.com</p>
-          <p className="text-gray-600"><strong>Phone:</strong> +123456789</p>
-          <p className="text-gray-600"><strong>Address:</strong> 1234 Medical St, City, Country</p>
-        </div>
-
-        {/* License Information */}
-        <div className="mb-4">
-          <h3 className="text-xl font-semibold text-gray-800">License Information</h3>
-          <p className="text-gray-600"><strong>License Number:</strong> MED123456</p>
-        </div>
-
-        {/* Experience */}
-        <div className="mb-4">
-          <h3 className="text-xl font-semibold text-gray-800">Experience</h3>
-          <p className="text-gray-600">10 years</p>
-        </div>
-
-        {/* Bio */}
-        <div className="mb-4">
-          <h3 className="text-xl font-semibold text-gray-800">Bio</h3>
-          <p className="text-gray-600">Dr. John Doe is an experienced cardiologist specializing in heart diseases.</p>
-        </div>
-
-        {/* Availability */}
-        <div className="mb-4">
-          <h3 className="text-xl font-semibold text-gray-800">Availability</h3>
-          <ul className="text-gray-600">
-            <li><strong>Monday:</strong> 9am - 5pm</li>
-            <li><strong>Tuesday:</strong> 9am - 5pm</li>
-            <li><strong>Wednesday:</strong> 9am - 5pm</li>
-            <li><strong>Thursday:</strong> 9am - 5pm</li>
-            <li><strong>Friday:</strong> 9am - 5pm</li>
-            <li><strong>Saturday:</strong> 10am - 2pm</li>
-            <li><strong>Sunday:</strong> Closed</li>
-          </ul>
-        </div>
-
-        {/* Social Links */}
-        <div className="mb-4">
-          <h3 className="text-xl font-semibold text-gray-800">Social Links</h3>
-          <ul className="text-gray-600">
-            <li><a href="https://www.linkedin.com/in/dr-johndoe" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">LinkedIn</a></li>
-            <li><a href="https://drjohndoe.com" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">Website</a></li>
-          </ul>
-        </div>
-      </div>
+          ))
+        ) : (
+          <p>No data available</p>
+        )
+      }
     </div>
   );
 };

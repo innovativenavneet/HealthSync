@@ -10,6 +10,7 @@ import SignUp from "./pages/SignUp";
 import { UserAuthContextProvider } from '../src/context/UserAuthContext';
 import ProtectedRoutes from "./components/common/ProtectedRoutes";
 import Roles from "./pages/Roles";
+import UpdateProfile from "./ProfilePage/UpdateProfile";
 
 // Helper component for role-based route protection
 const RoleBasedRoute = ({ children, allowedRoles }) => {
@@ -33,8 +34,14 @@ function App() {
             <Route path="/" element={<Roles />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/dashboard" element={<Dashboard/>} />
+            <Route path="/home" element={ <HomePage />} />
+            <Route path="/appointements" element={<Appointments/>} />
+            <Route path="/profile" element={<Profile/>} />
+            <Route path="/updateprofile" element={<UpdateProfile/>} />
 
-            {/* Protected Routes */}
+ 
+            {/* Protected Routes
             <Route
               path="/dashboard"
               element={
@@ -71,6 +78,14 @@ function App() {
                 </ProtectedRoutes>
               }
             />
+
+            <Route
+              path="/updateprofile"
+              element={
+                <ProtectedRoutes>
+                  <UpdateProfile/>
+                </ProtectedRoutes>
+              } /> */}
           </Routes>
         </UserAuthContextProvider>
       </div>

@@ -2,7 +2,7 @@ import Header from "../../components/common/Header";
 import DoctorName from "./DoctorName";
 import UpcommingConsultations from "./UpcommingConsultations";
 import RecentPatient from "./RecentPatient";
-import TodaysTasks from "./TodaysTask";
+import TodaysTasks from "../TodayTask/TodaysTask";
 
 const HomePage  = ()=>
 {
