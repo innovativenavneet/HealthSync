@@ -3,5 +3,16 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "compilerOptions": {
+    "allowJs": true, // Enable JavaScript file usage
+    "jsx": "react-jsx", // Use the appropriate JSX mode (React 17+)
+    "target": "ES6", // Specify ECMAScript target version
+    "module": "ESNext", // Specify module code generation
+    "moduleResolution": "node", // Use Node.js module resolution strategy
+    "strict": true, // Enable strict type-checking options
+    "esModuleInterop": true, // Ensure compatibility with CommonJS modules
+    "skipLibCheck": true // Skip type checking of declaration files
+  }
 }
+
