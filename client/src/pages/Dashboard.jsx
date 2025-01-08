@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Header from "../components/common/Header";
 
 const SpeechToTextRecorder = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -62,7 +63,9 @@ const SpeechToTextRecorder = () => {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div>
+      <Header />
+      <div style={{ padding: "20px" }}>
       <button
         onClick={handleMicClick}
         style={{
@@ -86,6 +89,7 @@ const SpeechToTextRecorder = () => {
           style={{ width: "100%", padding: "10px", fontSize: "14px" }}
         />
       </div>
+    </div>
     </div>
   );
 };

@@ -26,15 +26,15 @@ const Header = () => {
   ];
 
   return (
-    <header className="bg-[var(--light-blue)] shadow-md mx-auto p-4 flex justify-between items-center">
+    <header className="bg-[var(--light-blue)] flex w-[1365px] h-[102px] items-center">
       {/* Logo */}
-      <div className="flex items-center ml-7">
-        <img src={logo} alt="Logo" className="h-12 w-auto mr-2 ml-4" />
+      <div className="flex items-center  h-[102px] w-[188px] mr">
+        <img src={logo} alt="Logo" className="-2 ml-4" />
       </div>
 
       {/* Desktop Navigation */}
-      <nav className="hidden md:flex bg-[var(--blue)] shadow-md w-[71.5%] rounded-lg justify-center items-center mx-auto">
-        <ul className="flex space-x-20 text-white font-semibold px-4 py-2">
+      <nav className="hidden md:flex bg-[var(--blue)] shadow-md h-[40px]  rounded-md justify-center items-center mx-auto">
+        <ul className="flex space-x-24 text-white font-semibold px-5 py-2">
           {navItems.map((item) => (
             <li
               key={item.path}

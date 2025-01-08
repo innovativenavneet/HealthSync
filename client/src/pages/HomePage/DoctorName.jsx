@@ -30,9 +30,9 @@ return (
      <div className="bg-[var(--light-blue)] p-8">
         <div className="container mx-auto">
             <div className="flex justify-between items-center ">
-                <h1 className="text-[25px] leading-[34.05px] font-semibold w-[381px] h-[34px]">
+                <h4 className="text-[23px] leading-[34.05px] font-semibold w-[381px] h-[34px]">
                     Good Morning, {doctorName}
-                </h1>
+                </h4>
             </div>
         </div>
     </div>
