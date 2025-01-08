@@ -26,7 +26,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="bg-[var(--light-blue)] flex w-[1365px] h-[102px] items-center">
+    <header className="bg-[var(--light-blue)] flex w-[1366px] h-[102px] items-center">
       {/* Logo */}
       <div className="flex items-center  h-[102px] w-[188px] mr">
         <img src={logo} alt="Logo" className="-2 ml-4" />
@@ -71,7 +71,7 @@ const Header = () => {
         {user ? (
           <button
             onClick={handleLogOut} // Correct function name
-            className="bg-[var(--blue)] border border-white text-white px-4 py-2 rounded-[10px] font-bold hover:bg-[#174a77] transition-colors"
+            className="bg-[var(--blue)] border border-white text-white px-4 py-2 mr-5 rounded-[10px] font-bold hover:bg-[#174a77] transition-colors"
           >
             Logout
           </button>
