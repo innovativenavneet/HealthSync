@@ -1,6 +1,6 @@
 import TaskItem from "./TaskItem";
 
-const TaskList = ({ tasks, onShowDetails }) => {
+const TaskList = ({ tasks, onShowDetails, onDelete }) => {
   return (
     <div className="overflow-y-auto h-[200px]">
       {tasks.length > 0 ? (
@@ -9,6 +9,7 @@ const TaskList = ({ tasks, onShowDetails }) => {
             key={task.id}
             task={task}
             onShowDetails={() => onShowDetails(task)}
+            onDelete={() => onDelete(task.id)} // Pass the delete handler with the task ID
           />
         ))
       ) : (

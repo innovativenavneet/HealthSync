@@ -1,3 +1,7 @@
 # to add anything to git ignore , add like this :: 
 # echo .env >> .gitignore
 .env
+
+
+# Ignore the "node_modules" directory
+node_modules/

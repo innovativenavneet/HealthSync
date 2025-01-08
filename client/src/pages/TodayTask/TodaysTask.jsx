@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
-import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import app from "../FireBase/firebaseConfig";
 import { useUserAuth } from "../../context/UserAuthContext";
 import TaskList from "./TaskList";
@@ -8,11 +15,12 @@ import AddTaskPopup from "./AddTaskPopup";
 import TaskDetailPopup from "./TaskDetailPopup";
 
 const TodaysTasks = () => {
-  const { user, uid } = useUserAuth(); // Access user and uid from context
+  const { uid } = useUserAuth(); // Access uid from context
   const [tasks, setTasks] = useState([]);
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
 
+  // Fetch tasks from Firestore
   const fetchTasks = async () => {
     try {
       if (!uid) return; // Ensure UID is available
@@ -33,6 +41,7 @@ const TodaysTasks = () => {
     }
   };
 
+  // Add a new task to Firestore
   const addTask = async (heading, details) => {
     try {
       if (!uid) return; // Ensure UID is available
@@ -51,6 +60,21 @@ const TodaysTasks = () => {
     }
   };
 
+  // Delete a task from Firestore
+  const deleteTask = async (taskId) => {
+    try {
+      if (!uid || !taskId) return;
+      const db = getFirestore(app);
+      const taskDocRef = doc(db, "users", uid, "Tasks", taskId); // Correct document reference
+
+      await deleteDoc(taskDocRef); // Delete the task
+      fetchTasks(); // Refresh tasks after deletion
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  };
+
+  // Fetch tasks when the component mounts or `uid` changes
   useEffect(() => {
     if (uid) {
       fetchTasks(); // Fetch tasks when UID is available
@@ -73,8 +97,10 @@ const TodaysTasks = () => {
         </div>
       </header>
 
-      <TaskList tasks={tasks} onShowDetails={setSelectedTask} />
+      {/* Task List */}
+      <TaskList tasks={tasks} onShowDetails={setSelectedTask} onDelete={deleteTask} />
 
+      {/* Add Task Popup */}
       {showAddPopup && (
         <AddTaskPopup
           onClose={() => setShowAddPopup(false)}
@@ -82,6 +108,7 @@ const TodaysTasks = () => {
         />
       )}
 
+      {/* Task Detail Popup */}
       {selectedTask && (
         <TaskDetailPopup
           task={selectedTask}

@@ -32,10 +32,10 @@ const Header = () => {
             <Link to={"/home"}>HOME</Link>
           </li>
           <li className="hover:underline transition-colors underline-offset-4">
-            <Link to={"/appointments"}>APPOINTMENTS</Link>
+            <Link to={"/dashboard"}>DASHBOARD</Link>
           </li>
           <li className="hover:underline transition-colors underline-offset-4">
-            <Link to={"/dashboard"}>DASHBOARD</Link>
+            <Link to={"/appointments"}>APPOINTMENTS</Link>
           </li>
           <li className="hover:underline transition-colors underline-offset-4">
             <Link to={"/profile"}>PROFILE</Link>
