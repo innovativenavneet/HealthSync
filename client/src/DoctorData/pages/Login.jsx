@@ -19,7 +19,7 @@ const Login = () => {
     setError("");
     try {
       await login(email, password);
-      navigate(role === "DOCTOR" ? "/dashboard" : "/appointments");
+      navigate(role === "DOCTOR" ? "/home" : "/appointments");
     } catch (err) {
       setError(err.message);
     }

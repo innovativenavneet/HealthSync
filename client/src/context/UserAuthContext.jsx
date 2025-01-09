@@ -8,7 +8,7 @@ import {
     signInWithPopup,
 } from "firebase/auth";
 
-import { auth } from "../pages/FireBase/firebaseConfig";
+import { auth } from "../FireBase/firebaseConfig";
 
 const UserAuthContext = createContext();
 
@@ -54,6 +54,8 @@ export function UserAuthContextProvider({ children }) {
           const provider = new GoogleAuthProvider();
           const userCredential = await signInWithPopup(auth, provider); // Wait for the sign-in popup
           setUser(userCredential.user); // Update the user state
+          // console.log(userCredential.user.displayName);
+          
           setUid(userCredential.user.uid); // Update the UID state
           return userCredential; // Return the userCredential object
         } catch (error) {

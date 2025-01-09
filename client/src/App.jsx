@@ -1,16 +1,16 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
-import HomePage from "./pages/HomePage/HomePage";
-import Dashboard from "./pages/Dashboard";
-import Appointments from "./pages/Appointments";
-import Profile from "./ProfilePage/Profile";
-import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
-import { UserAuthContextProvider } from '../src/context/UserAuthContext';
+import HomePage from "./DoctorData/pages/HomePage/HomePage";
+import Dashboard from "./DoctorData/pages/Dashboard";
+import Appointments from "./DoctorData/Appointments";
+import Profile from "./DoctorData/ProfilePage/Profile";
+import Login from "./DoctorData/pages/Login";
+import SignUp from "./DoctorData/pages/SignUp";
+import { UserAuthContextProvider } from "./context/UserAuthContext";
 import ProtectedRoutes from "./components/common/ProtectedRoutes";
-import Roles from "./pages/Roles";
-import UpdateProfile from "./ProfilePage/UpdateProfile";
+import Roles from "./DoctorData/pages/Roles";
+import UpdateProfile from "./DoctorData/ProfilePage/UpdateProfile";
 
 // Helper component for role-based route protection
 const RoleBasedRoute = ({ children, allowedRoles }) => {

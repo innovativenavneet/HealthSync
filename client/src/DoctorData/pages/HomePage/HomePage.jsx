@@ -7,7 +7,7 @@ import TodaysTasks from "../../TodayTask/TodaysTask";
 const HomePage  = ()=>
 {
     return(
-        <div className="bg-[var(--light-blue)] min-h-screen ">
+        <div className="bg-[var(--light-blue)] h-[1024px] w-[1440px]">
             <Header/>
             <DoctorName/>
             <UpcommingConsultations/>

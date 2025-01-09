@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "../../components/common/Header";
 
-const SpeechToTextRecorder = () => {
+const Dashboard = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [mediaRecorder, setMediaRecorder] = useState(null);
@@ -94,4 +94,4 @@ const SpeechToTextRecorder = () => {
   );
 };
 
-export default SpeechToTextRecorder;
+export default Dashboard;
