@@ -8,8 +8,8 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import app from "../../FireBase/firebaseConfig";
-import { useUserAuth } from "../../context/UserAuthContext";
+import app from "../../../../FireBase/firebaseConfig";
+import { useUserAuth } from "../../../../context/UserAuthContext";
 import TaskList from "./TaskList";
 import AddTaskPopup from "./AddTaskPopup";
 import TaskDetailPopup from "./TaskDetailPopup";
@@ -82,7 +82,7 @@ const TodaysTasks = () => {
   }, [uid]);
 
   return (
-    <div className="relative bg-white p-4 rounded-[7px] shadow-lg w-[686px] h-[250px] mt-4 border border-gray-300 left-[30px]">
+    <div className="relative bg-white overflow-auto p-4 rounded-[7px] shadow-lg w-[686px] h-[180px] mt-4 border border-gray-300 ml-4">
       <header className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold text-blue-900">Today's Tasks</h2>
         <div className="flex items-center space-x-2">

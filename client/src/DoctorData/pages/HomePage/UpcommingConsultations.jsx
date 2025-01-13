@@ -1,6 +1,6 @@
 const UpcomingConsultations = () => {
     return (
-      <section className="bg-white p-4 rounded-lg shadow-lg w-[600px] h-[233px] border border-gray-300  relative left-[30px]">
+      <section className="bg-white p-1 rounded-lg shadow-lg w-[600px] h-[220px] border border-gray-300 ml-4">
         <header>
           <h2 className="text-2xl font-semibold text-black px-4 py-2 rounded-t-md">
             Upcoming Consultations

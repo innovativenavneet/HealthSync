@@ -82,7 +82,7 @@ const RecentPatient = () => {
     }
 
     return (
-        <section className="absolute top-[184px] left-[738px] w-[612px] h-[669px] bg-white rounded-[12px] border border-gray-300 shadow-lg p-4">
+        <section className="absolute top-[165px] left-[738px] w-[612px] h-[430px] bg-white rounded-[12px] border border-gray-300 shadow-lg p-4 mr-5">
             {error && <p className="text-yellow-600 mb-4">{error}</p>}
 
             {/* Search Input, Search Button, and Filter Button */}
@@ -109,18 +109,18 @@ const RecentPatient = () => {
             </div>
 
             {/* Patient List */}
-            <div className=" overflow-y-auto ">
+            <div >
                 {(showAll ? filteredPatients : filteredPatients.slice(0, 4)).map((patient) => (
                     <div
                         key={patient.id}
-                        className="relative w-[547px] h-[111px] bg-white rounded-[7px] border border-gray-300 mb-4 flex items-center"
+                        className="relative overflow-hidden w-[547px] h-[111px] bg-white rounded-[7px] border border-gray-300 mb-4 flex items-center"
                     >
                         <div
-                            className="w-[44px] h-[44px] rounded-full bg-gray-200 flex-shrink-0 ml-4"
+                            className="w-[44px] h-[44px] rounded-full bg-gray-200 flex-shrink-0   ml-4"
                         >
                             {/* Placeholder for patient avatar */}
                         </div>
-                        <div className="ml-4">
+                        <div className="ml-4  ">
                             <p className="text-lg font-semibold text-black">
                                 {patient.name}
                             </p>
