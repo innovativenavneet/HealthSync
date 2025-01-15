@@ -1,10 +1,11 @@
-import React from "react";
-import Header from "../../components/common/Header";
-import { getFirestore, getDocs, collection, doc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getFirestore, getDocs, collection } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import app from "../../FireBase/firebaseConfig";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import Header from "../../components/common/Header";
+import DoctorAvatar from "../../assets/images/DoctorAvatar.png";
+import Edit from "../../assets/images/Edit.png";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -39,83 +40,108 @@ const Profile = () => {
   }, []);
 
   return (
-    <div>
+    <div className="bg-[var(--light-blue)]">
       <Header />
-      <div className="min-h-screen bg-blue-50">
-        <div className="max-w-6xl mx-auto py-10 px-4">
-          <h1 className="text-3xl font-bold text-center mb-8">My Profile</h1>
-          {profileData.length > 0 ? (
-            profileData.map((profile) => (
-              <div key={profile.id} className=" rounded-lg shadow-lg p-6">
-                {/* Header Section */}
-                <div className="flex items-center mb-6">
-                  <div className="w-[336px] h-[336px] rounded-full bg-blue-100 flex justify-center items-center overflow-hidden relative">
-                    <img
-                      src={profile.Image}
-                      alt="Profile"
-                      className="w-full h-full object-cover"
-                    />
-                    <button className="absolute bottom-2 right-2 bg-blue-600 text-white rounded-full p-2">
-                      <i className="fas fa-camera"></i>
-                    </button>
-                  </div>
-                       <div className="p-6 ml-6">
-        {/* Name */}
-        <h2 className="text-2xl font-bold mb-2">{profile.Name}</h2>
-        
-        {/* Specification */}
-        <h4 className="text-lg font-semibold text-gray-700">Specification</h4>
-        <p className="text-lg text-gray-600 mb-4">{profile.Specification}</p>
-
-        {/* Contact Number */}
-        <h4 className="text-lg font-semibold text-gray-700 mt-2">
-          Contact Number:
-        </h4>
-        <p className="text-gray-600 mb-4">{profile.PhoneNumber}</p>
-
-        {/* Email */}
-        <h4 className="text-lg font-semibold text-gray-700 mt-2">Email:</h4>
-        <p className="text-gray-600 mb-4">{profile.Email}</p>
-
-        {/* Address */}
-        <h4 className="text-lg font-semibold text-gray-700 mt-2">Address:</h4>
-        <p className="text-gray-600">{profile.Address}</p>
+      <div className="absolute top-28 left-2/4 h-11 w-44 mt-1">
+        <h1 className="font-sans font-bold text-3xl leading-3">My Profile</h1>
       </div>
 
-                </div>
+      {/* Doctor Image */}
+      <div className="absolute top-36 left-40">
+        <div className="flex items-center justify-center w-56 h-56 rounded-full overflow-hidden border border-gray-300 bg-blue-300">
+          <img className="w-full h-full object-contain p-2 pb-8" src={DoctorAvatar} alt="Doctor Avatar" />
+        </div>
+      </div>
 
-                {/* Details Sections */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="border rounded-lg p-4">
-                    <h4 className="font-semibold">Professional Details</h4>
-                    <p>Current Hospital: {profile.HospitalName}</p>
-                    <p>License Number: {profile.LicenseNumber}</p>
-                    <p>License Expiry: 31st December 2025</p>
-                  </div>
-                  <div className="border rounded-lg p-4">
-                    <h4 className="font-semibold">Social Links & Awards</h4>
-                    <p>Twitter: {profile.Twitter}</p>
-                    <p>Instagram: {profile.Instagram}</p>
-                    <p>Awards: {profile.Awards}</p>
-                  </div>
-                </div>
+      {/* Personal Information */}
+      <div className="bg-white h-56 w-[720px] rounded-lg shadow-md border border-gray-300 p-2 absolute top-40 left-[477px]">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between w-full">
+            <div className="text-center flex-1">
+              <h2 className="font-sans font-bold text-xl leading-3">Professional Details</h2>
+            </div>
+            <div className="h-6 w-6">
+              <img src={Edit} alt="Edit Icon" />
+            </div>
+          </div>
+          <div className="flex items-center">
+            <h2 className="text-lg font-semibold text-gray-700 h-7 w-20 tracking-wider">Name:</h2>
+            <p className="text-base text-gray-600 tracking-widest">Anand</p>
+          </div>
+          <div className="flex items-center">
+            <h2 className="text-lg font-semibold text-gray-700 h-7 w-36 tracking-wider">Specialization:</h2>
+            <p className="text-base text-gray-600 tracking-widest">Cardiologist</p>
+          </div>
+          <div className="flex items-center">
+            <h2 className="text-lg font-semibold text-gray-700 h-7 w-40 tracking-wider">Mobile Number:</h2>
+            <p className="text-base text-gray-600 tracking-widest">1234567890</p>
+          </div>
+          <div className="flex items-center">
+            <h2 className="text-lg font-semibold text-gray-700 h-7 w-16 tracking-wider">Email:</h2>
+            <p className="text-base text-gray-600 tracking-widest">anand12@gmail.com</p>
+          </div>
+          <div className="flex items-center">
+            <h2 className="text-lg font-semibold text-gray-700 h-7 w-24 tracking-wider">Address:</h2>
+            <p className="text-base text-gray-600 tracking-widest">Jaipur, Rajasthan</p>
+          </div>
+        </div>
+      </div>
 
-                {/* Edit Button */}
-                <div className="mt-6 text-center">
-                  <button
-                    onClick={() => {
-                      navigate("/updateprofile");
-                    }}
-                    className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 transition duration-200"
-                  >
-                    Edit Profile
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-center text-gray-600">No data available</p>
-          )}
+      {/* Professional Details */}
+      <div className="absolute top-[400px] left-[100px]">
+        <div className="bg-white w-[500px] h-[180px] rounded-lg border border-gray-300 shadow-md space-y-3 p-4">
+          <div className="flex items-center justify-between w-full">
+            <div className="text-center flex-1">
+              <h2 className="font-sans font-bold text-xl leading-3">Professional Details</h2>
+            </div>
+            <div className="h-6 w-6">
+              <img src={Edit} alt="Edit Icon" />
+            </div>
+          </div>
+          <div className="flex items-center">
+            <h2 className="text-lg font-semibold text-gray-700 w-24 tracking-wider">Hospital:</h2>
+            <p className="text-base text-gray-600 tracking-widest">Swaimann Hospital</p>
+          </div>
+          <div className="flex items-center">
+            <h2 className="text-lg font-semibold text-gray-700 w-42 tracking-wider">License Number:</h2>
+            <p className="text-base text-gray-600 tracking-widest">ABC132FR</p>
+          </div>
+          <div className="flex items-center">
+            <h2 className="text-lg font-semibold text-gray-700 w-40 tracking-wider">License Expiry:</h2>
+            <p className="text-base text-gray-600 tracking-widest">31st December 2090</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Social Links */}
+      <div className="absolute top-[400px] left-[700px]">
+        <div className="bg-white w-[500px] h-[180px] rounded-lg border border-gray-300 shadow-md p-4 space-y-3">
+          <div className="flex items-center justify-between w-full">
+            <div className="text-center flex-1">
+              <h2 className="font-sans font-bold text-xl leading-3">Social Links</h2>
+            </div>
+            <div className="h-6 w-6">
+              <img src={Edit} alt="Edit Icon" />
+            </div>
+          </div>
+          <div className="flex items-center">
+            <h2 className="text-lg font-semibold text-gray-700 w-20 tracking-wider">Twitter:</h2>
+            <a href="https://x.com/?mx=2" target="_blank" rel="noopener noreferrer" className="text-base text-gray-600 hover:underline tracking-widest">
+              www.Twitter.com
+            </a>
+          </div>
+          <div className="flex items-center">
+            <h2 className="text-lg font-semibold text-gray-700 w-28 tracking-wider">Instagram:</h2>
+            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" className="text-base text-gray-600 hover:underline tracking-widest">
+              www.Instagram.com
+            </a>
+          </div>
+          <div className="flex items-center">
+            <h2 className="text-lg font-semibold text-gray-700 w-28 tracking-wider">Facebook:</h2>
+            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" className="text-base text-gray-600 hover:underline tracking-widest">
+              www.Facebook.com
+            </a>
+          </div>
         </div>
       </div>
     </div>
