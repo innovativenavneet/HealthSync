@@ -3,14 +3,16 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import HomePage from "./DoctorData/pages/HomePage/HomePage";
 import Dashboard from "./DoctorData/pages/Dashboard";
-import Appointments from "./DoctorData/Appointments";
-import Profile from "./DoctorData/ProfilePage/Profile";
+import Appointments from "./DoctorData/pages/AppointementsSection/Appointments";
+import Profile from "./DoctorData/pages/ProfilePage/Profile";
 import Login from "./DoctorData/pages/Login";
 import SignUp from "./DoctorData/pages/SignUp";
 import { UserAuthContextProvider } from "./context/UserAuthContext";
 import ProtectedRoutes from "./components/common/ProtectedRoutes";
 import Roles from "./DoctorData/pages/Roles";
-import UpdateProfile from "./DoctorData/ProfilePage/UpdateProfile";
+import UpdateProfile from "./DoctorData/pages/ProfilePage/UpdateProfile";
+import DoctorList from "./PatientData/DoctorListing/DoctorList";
+import AppointmentForm from "./PatientData/AppointmentForm";
 
 // Helper component for role-based route protection
 const RoleBasedRoute = ({ children, allowedRoles }) => {
@@ -39,6 +41,8 @@ function App() {
             <Route path="/appointments" element={ <Appointments/> } />
             <Route path="/profile" element={<Profile/>} />
             <Route path="/updateprofile" element={<UpdateProfile/>} />
+            <Route path ="/doctorlist" element={ <DoctorList/> } />
+            <Route path="/bookappointment" element={ <AppointmentForm/> } />
 
  
             {/* Protected Routes

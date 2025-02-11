@@ -25,7 +25,7 @@ const TodaysTasks = () => {
     try {
       if (!uid) return; // Ensure UID is available
       const db = getFirestore(app);
-      const tasksRef = collection(db, "users", uid, "Tasks");
+      const tasksRef = collection(db, "Users", uid, "Tasks");
       const querySnapshot = await getDocs(tasksRef);
 
       const fetchedTasks = querySnapshot.docs.map((doc) => ({
@@ -46,7 +46,7 @@ const TodaysTasks = () => {
     try {
       if (!uid) return; // Ensure UID is available
       const db = getFirestore(app);
-      const taskRef = collection(db, "users", uid, "Tasks");
+      const taskRef = collection(db, "Users", uid, "Tasks");
 
       await addDoc(taskRef, {
         Heading: heading,
@@ -65,7 +65,7 @@ const TodaysTasks = () => {
     try {
       if (!uid || !taskId) return;
       const db = getFirestore(app);
-      const taskDocRef = doc(db, "users", uid, "Tasks", taskId); // Correct document reference
+      const taskDocRef = doc(db, "Users", uid, "Tasks", taskId); // Correct document reference
 
       await deleteDoc(taskDocRef); // Delete the task
       fetchTasks(); // Refresh tasks after deletion

@@ -69,8 +69,8 @@ const Profile = () => {
           <div className="absolute top-36 left-40">
             <div className="flex items-center justify-center w-56 h-56 rounded-full overflow-hidden border border-gray-300 bg-blue-400">
               <img
-                className="w-full h-full object-cover p-2 pb-8"
-                src={DoctorAvatar}
+                className="w-full h-full object-cover"
+                src={profileData.profileImage}
                 alt="Doctor Avatar"
               />
             </div>

@@ -7,76 +7,118 @@ import {
     GoogleAuthProvider,
     signInWithPopup,
 } from "firebase/auth";
-
-import { auth } from "../FireBase/firebaseConfig";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import { auth, db } from "../FireBase/firebaseConfig";
 
 const UserAuthContext = createContext();
 
 export function UserAuthContextProvider({ children }) {
-    const [user, setUser] = useState(null); // State to store user object
-    const [uid, setUid] = useState(null); // State to store user UID
+    const [user, setUser] = useState(null);
+    const [uid, setUid] = useState(null);
+    const [role, setRole] = useState(null);
+
+    // Function to save user data to Firestore
+    const saveUserToFirestore = async (uid, email, role) => {
+        try {
+            const userDocRef = doc(db, "Users", uid);
+            const userDoc = await getDoc(userDocRef);
+
+            if (!userDoc.exists()) {
+                await setDoc(userDocRef, {
+                    email,
+                    role,
+                    createdAt: new Date(),
+                });
+                console.log("User data saved in Firestore");
+            } else {
+                console.log("User already exists in Firestore");
+            }
+        } catch (err) {
+            console.error("Error saving user data to Firestore:", err);
+        }
+    };
 
     // Signup function
-    async function signup(email, password) {
+    async function signup(email, password, role) {
         try {
-          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-          setUser(userCredential.user); // Update the user state
-          setUid(userCredential.user.uid); // Update the UID state
-          return userCredential; // Return the userCredential object
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const uid = userCredential.user.uid;
+            setUser(userCredential.user);
+            setUid(uid);
+            setRole(role);
+
+            await saveUserToFirestore(uid, email, role);
+            return userCredential;
         } catch (error) {
-          throw error; // Propagate the error to the calling function
+            console.error("Signup error:", error);
+            throw error;
         }
-      }
+    }
 
     // Login function
     async function login(email, password) {
         try {
-          const userCredential = await signInWithEmailAndPassword(auth, email, password);
-          setUser(userCredential.user); // Update the user state
-          setUid(userCredential.user.uid); // Update the UID state
-          return userCredential; // Return the userCredential object
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const uid = userCredential.user.uid;
+            setUser(userCredential.user);
+            setUid(uid);
+
+            // Fetch user role from Firestore
+            const userDocRef = doc(db, "Users", uid);
+            const userDoc = await getDoc(userDocRef);
+            if (userDoc.exists()) {
+                const fetchedRole = userDoc.data().role;
+                setRole(fetchedRole);
+            } else {
+                throw new Error("User role not found in Firestore.");
+            }
+            return userCredential;
         } catch (error) {
-          throw error; // Propagate the error to the calling function
+            console.error("Login error:", error);
+            throw error;
         }
-      }
-      
+    }
 
     // Logout function
     function logOut() {
         setUser(null);
         setUid(null);
+        setRole(null);
+        localStorage.removeItem("userRole"); // Clear cached role
         return signOut(auth);
     }
 
     // Google sign-in function
-    async function signInWithGoogle() {
+    async function signInWithGoogle(role) {
         try {
-          const provider = new GoogleAuthProvider();
-          const userCredential = await signInWithPopup(auth, provider); // Wait for the sign-in popup
-          setUser(userCredential.user); // Update the user state
-          // console.log(userCredential.user.displayName);
-          
-          setUid(userCredential.user.uid); // Update the UID state
-          return userCredential; // Return the userCredential object
-        } catch (error) {
-          throw error; // Propagate the error to the calling function
-        }
-      }
-      
+            if (!["DOCTOR", "PATIENT"].includes(role)) {
+                throw new Error("Invalid role selected");
+            }
+            const provider = new GoogleAuthProvider();
+            const userCredential = await signInWithPopup(auth, provider);
+            const uid = userCredential.user.uid;
+            setUser(userCredential.user);
+            setUid(uid);
+            setRole(role);
 
-    // Keep track of authentication state changes
+            await saveUserToFirestore(uid, userCredential.user.email, role);
+            return userCredential;
+        } catch (error) {
+            console.error("Google Sign-In error:", error);
+            throw error;
+        }
+    }
+
+    // Track authentication state changes
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
-            // setUid(currentUser?.uid || null); // Save UID if user is logged in
         });
-
-        // Return the unsubscribe function for cleanup
         return () => unsubscribe();
     }, []);
 
     return (
-        <UserAuthContext.Provider value={{ user, uid, signup, login, logOut, signInWithGoogle }}>
+        <UserAuthContext.Provider value={{ user, role, uid, signup, login, logOut, signInWithGoogle }}>
             {children}
         </UserAuthContext.Provider>
     );

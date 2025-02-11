@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { Button, Card, Typography } from "@mui/material";
+import { motion } from "framer-motion";
 
 const Roles = () => {
   const navigate = useNavigate();
@@ -14,22 +16,32 @@ const Roles = () => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center bg-gray-700 h-[100vh]">
-      <h1 className="text-3xl font-bold text-white mb-6">Choose Your Role</h1>
-      <div className="flex justify-between bg-slate-500 p-8 rounded-lg shadow-lg">
-        <button
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-br from-purple-700 to-gray-900 p-6">
+      <Typography variant="h3" className="text-white font-bold mb-8 drop-shadow-lg" component={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+        Choose Your Role
+      </Typography>
+      <Card className="p-10 rounded-2xl shadow-2xl bg-white flex flex-col sm:flex-row gap-6" component={motion.div} initial={{ scale: 0.9 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }}>
+        <Button
+          variant="contained"
+          color="primary"
           onClick={handlePatient}
-          className="h-52 w-56 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600 transition duration-300"
+          className="h-56 w-60 text-lg font-bold rounded-xl shadow-lg"
+          component={motion.button}
+          whileHover={{ scale: 1.05 }}
         >
           Login as Patient
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="contained"
+          color="success"
           onClick={handleDoctor}
-          className="h-52 w-56 bg-green-500 text-white font-bold rounded-lg hover:bg-green-600 transition duration-300"
+          className="h-56 w-60 text-lg font-bold rounded-xl shadow-lg"
+          component={motion.button}
+          whileHover={{ scale: 1.05 }}
         >
           Login as Doctor
-        </button>
-      </div>
+        </Button>
+      </Card>
     </div>
   );
 };

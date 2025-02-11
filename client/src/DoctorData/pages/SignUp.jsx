@@ -1,59 +1,47 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserAuth } from "../../context/UserAuthContext";
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore"; // Import Firestore
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("PATIENT"); // Default role
+  const [role, setRole] = useState("PATIENT");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { signup } = useUserAuth();
   const navigate = useNavigate();
-  const db = getFirestore(); // Initialize Firestore
-
-  // Function to save user data to Firestore
-  const saveUserToFirestore = async (uid, email, role) => {
-    try {
-      const userDocRef = doc(db, "users", uid);
-      const userDoc = await getDoc(userDocRef);
-
-      // Only save data if the user document doesn't already exist
-      if (!userDoc.exists()) {
-        await setDoc(userDocRef, {
-          email,
-          role,
-          createdAt: new Date(),
-        });
-        console.log("User data saved in Firestore");
-      } else {
-        console.log("User already exists in Firestore");
-      }
-    } catch (err) {
-      console.error("Error saving user data to Firestore:", err.message);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
+    if (!email.includes("@")) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return;
+    }
+
+    setIsLoading(true);
     try {
-      const userCredential = await signup(email, password);
-      const uid = userCredential.user.uid;
-
-      // Save user data to Firestore
-      await saveUserToFirestore(uid, email, role);
-
-      // Save role and UID to localStorage
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ uid, role })
-      );
-
-      navigate("/home");
+      await signup(email, password, role);
+      localStorage.setItem("user", JSON.stringify({ role }));
+      navigate(role === "DOCTOR" ? "/home" : "/appointments");
     } catch (err) {
-      setError(err.message);
+      switch (err.code) {
+        case "auth/email-already-in-use":
+          setError("This email is already in use. Please use a different email.");
+          break;
+        case "auth/weak-password":
+          setError("Password is too weak. Please use a stronger password.");
+          break;
+        default:
+          setError("Failed to sign up. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -65,9 +53,7 @@ const SignUp = () => {
         </h2>
 
         {error && (
-          <div className="text-red-600 text-center mb-4">
-            {error}
-          </div>
+          <div className="text-red-600 text-center mb-4">{error}</div>
         )}
 
         <form onSubmit={handleSubmit}>
@@ -75,7 +61,8 @@ const SignUp = () => {
             <input
               type="email"
               placeholder="Email address"
-              className="w-full border border-gray-300 rounded px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              aria-label="Email address"
+              className="w-full border border-gray-300 rounded px-4 py-2"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -85,18 +72,17 @@ const SignUp = () => {
             <input
               type="password"
               placeholder="Password"
-              className="w-full border border-gray-300 rounded px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              aria-label="Password"
+              className="w-full border border-gray-300 rounded px-4 py-2"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
           <div className="mb-4">
-            <label className="block mb-2 text-gray-700 font-medium">
-              Select Role
-            </label>
+            <label className="block mb-2">Select Role</label>
             <select
-              className="w-full border border-gray-300 rounded px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded px-4 py-2"
               value={role}
               onChange={(e) => setRole(e.target.value)}
             >
@@ -105,20 +91,19 @@ const SignUp = () => {
             </select>
           </div>
 
-          <div>
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition-all"
-            >
-              Sign Up
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            disabled={isLoading}
+          >
+            {isLoading ? "Signing Up..." : "Sign Up"}
+          </button>
         </form>
 
         <div className="text-center mt-6">
-          <p className="text-gray-700">
+          <p>
             Already have an account?{" "}
-            <Link to="/login" className="text-blue-500 underline hover:text-blue-700">
+            <Link to="/login" className="text-blue-500">
               Login
             </Link>
           </p>
